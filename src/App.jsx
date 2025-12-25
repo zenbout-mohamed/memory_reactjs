@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import Title from "./components/Title/Title";
+import Card from "./components/Card/Card";
+import Button from "./components/Button/Button";
+import "./App.css";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [cards, setCards] = useState([]);
+  const [firstCard, setFirstCard] = useState(null);
+  const [secondCard, setSecondCard] = useState(null);
+  const [lockBoard, setLockBoard] = useState(false);
+  const [hasWon, setHasWon] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <Title text="Jeu de Memory" />
+
+      <div className="grid">
+        {cards.map((card) => (
+          <Card
+            key={card.id}
+            card={card}
+            onClick={() => console.log(card)}
+          />
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <Button text="Rejouer" onClick={() => console.log("reset")} />
+
+      {hasWon && <p>🎉 Bravo, vous avez gagné !</p>}
+    </div>
+  );
 }
 
-export default App
+export default App;
