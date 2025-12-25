@@ -4,6 +4,21 @@ import Card from "./components/Card/Card";
 import Button from "./components/Button/Button";
 import "./App.css";
 
+const symbols = ["🍎", "🍌", "🍇", "🍓", "🍒", "🍍"];
+
+function generateCards() {
+  const duplicated = [...symbols, ...symbols];
+
+  return duplicated
+    .sort(() => Math.random() - 0.5)
+    .map((symbol, index) => ({
+      id: index,
+      symbol,
+      flipped: false,
+      matched: false,
+    }));
+}
+
 
 function App() {
   const [cards, setCards] = useState([]);
