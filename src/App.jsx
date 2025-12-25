@@ -30,12 +30,31 @@ function App() {
   const [time, setTime] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
 
-  /* Initialisation des cartes */
+  /* 🔹 Réinitialisation du tour */
+  function resetTurn() {
+    setFirstCard(null);
+    setSecondCard(null);
+    setLockBoard(false);
+  }
+
+  /* 🔹 Rejouer */
+  function resetGame() {
+    setCards(generateCards());
+    setFirstCard(null);
+    setSecondCard(null);
+    setLockBoard(false);
+    setHasWon(false);
+    setMoves(0);
+    setTime(0);
+    setTimerActive(false);
+  }
+
+  /* 🔹 Initialisation des cartes au lancement */
   useEffect(() => {
     resetGame();
   }, []);
 
-  /* Timer */
+  /* 🔹 Timer */
   useEffect(() => {
     let interval;
     if (timerActive) {
@@ -44,7 +63,7 @@ function App() {
     return () => clearInterval(interval);
   }, [timerActive]);
 
-  /* Gestion du clic sur une carte */
+  /* 🔹 Gestion du clic sur une carte */
   function handleCardClick(card) {
     if (lockBoard || card.flipped || card.matched) return;
 
@@ -64,7 +83,7 @@ function App() {
     }
   }
 
-  /* Comparaison des cartes */
+  /* 🔹 Comparaison des cartes */
   useEffect(() => {
     if (firstCard && secondCard) {
       if (firstCard.symbol === secondCard.symbol) {
@@ -91,32 +110,13 @@ function App() {
     }
   }, [firstCard, secondCard]);
 
-  /* Réinitialisation du tour */
-  function resetTurn() {
-    setFirstCard(null);
-    setSecondCard(null);
-    setLockBoard(false);
-  }
-
-  /* Détection de la victoire */
+  /* 🔹 Détection de la victoire */
   useEffect(() => {
     if (cards.length > 0 && cards.every((card) => card.matched)) {
       setHasWon(true);
       setTimerActive(false);
     }
   }, [cards]);
-
-  /* Rejouer */
-  function resetGame() {
-    setCards(generateCards());
-    setFirstCard(null);
-    setSecondCard(null);
-    setLockBoard(false);
-    setHasWon(false);
-    setMoves(0);
-    setTime(0);
-    setTimerActive(false);
-  }
 
   return (
     <div className="app">

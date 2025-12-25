@@ -1,4 +1,4 @@
-/*  Général  */
+/* Général */
 .app {
   text-align: center;
   padding: 2rem;
@@ -6,10 +6,19 @@
 }
 
 .title {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
-/*  Grille de cartes  */
+/* Statistiques */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+/* Grille de cartes */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 100px);
@@ -18,7 +27,7 @@
   margin-bottom: 2rem;
 }
 
-/*  Carte  */
+/* Carte */
 .card {
   width: 100px;
   height: 100px;
@@ -61,7 +70,7 @@
   transform: rotateY(180deg);
 }
 
-/*  Bouton  */
+/* Bouton */
 .button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -76,9 +85,9 @@
   background-color: #1976d2;
 }
 
-/*  Message de victoire  */
+/* Message de victoire */
 .win-message {
   font-size: 1.5rem;
-  color: rgb(14, 202, 14);
+  color: green;
   margin-top: 1rem;
 }
