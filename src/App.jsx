@@ -4,13 +4,12 @@ import Card from "./components/Card/Card";
 import Button from "./components/Button/Button";
 import "./App.css";
 
-/* 🔹 Symboles des cartes */
+/* Symboles des cartes */
 const symbols = ["🍎", "🍌", "🍇", "🍓", "🍒", "🍍"];
 
-/* 🔹 Génération et mélange des cartes */
+/* Génération et mélange des cartes */
 function generateCards() {
   const duplicated = [...symbols, ...symbols];
-
   return duplicated
     .sort(() => Math.random() - 0.5)
     .map((symbol, index) => ({
@@ -22,19 +21,30 @@ function generateCards() {
 }
 
 function App() {
-  /* 🔹 États du jeu */
   const [cards, setCards] = useState([]);
   const [firstCard, setFirstCard] = useState(null);
   const [secondCard, setSecondCard] = useState(null);
   const [lockBoard, setLockBoard] = useState(false);
   const [hasWon, setHasWon] = useState(false);
+  const [moves, setMoves] = useState(0);
+  const [time, setTime] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
 
-  /* 🔹 Initialisation du jeu */
+  /* Initialisation des cartes */
   useEffect(() => {
-    setCards(generateCards());
+    resetGame();
   }, []);
 
-  /* 🔹 Gestion du clic sur une carte */
+  /* Timer */
+  useEffect(() => {
+    let interval;
+    if (timerActive) {
+      interval = setInterval(() => setTime((t) => t + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive]);
+
+  /* Gestion du clic sur une carte */
   function handleCardClick(card) {
     if (lockBoard || card.flipped || card.matched) return;
 
@@ -46,13 +56,15 @@ function App() {
 
     if (!firstCard) {
       setFirstCard(card);
+      if (!timerActive) setTimerActive(true);
     } else {
       setSecondCard(card);
       setLockBoard(true);
+      setMoves((m) => m + 1);
     }
   }
 
-  /* 🔹 Comparaison des cartes */
+  /* Comparaison des cartes */
   useEffect(() => {
     if (firstCard && secondCard) {
       if (firstCard.symbol === secondCard.symbol) {
@@ -79,30 +91,41 @@ function App() {
     }
   }, [firstCard, secondCard]);
 
-  /* 🔹 Réinitialisation du tour */
+  /* Réinitialisation du tour */
   function resetTurn() {
     setFirstCard(null);
     setSecondCard(null);
     setLockBoard(false);
   }
 
-  /* 🔹 Détection de la victoire */
+  /* Détection de la victoire */
   useEffect(() => {
     if (cards.length > 0 && cards.every((card) => card.matched)) {
       setHasWon(true);
+      setTimerActive(false);
     }
   }, [cards]);
 
-  /* 🔹 Relancer une partie */
+  /* Rejouer */
   function resetGame() {
     setCards(generateCards());
+    setFirstCard(null);
+    setSecondCard(null);
+    setLockBoard(false);
     setHasWon(false);
-    resetTurn();
+    setMoves(0);
+    setTime(0);
+    setTimerActive(false);
   }
 
   return (
     <div className="app">
       <Title text="Jeu de Memory" />
+
+      <div className="stats">
+        <p>⏱️ Temps: {time}s</p>
+        <p>🔄 Coups: {moves}</p>
+      </div>
 
       <div className="grid">
         {cards.map((card) => (
@@ -116,7 +139,11 @@ function App() {
 
       <Button text="Rejouer" onClick={resetGame} />
 
-      {hasWon && <p className="win-message">🎉 Bravo, vous avez gagné !</p>}
+      {hasWon && (
+        <p className="win-message">
+          🎉 Bravo, vous avez gagné en {moves} coups et {time}s !
+        </p>
+      )}
     </div>
   );
 }
